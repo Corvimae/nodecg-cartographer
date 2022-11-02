@@ -1,0 +1,58 @@
+{
+  "name": "nodecg-cartographer",
+  "version": "1.0.0",
+  "description": "YAML-driven layouting engine for nodecg",
+  "main": "dist/nodecg-cartographer.js",
+  "repository": "https://github.com/corvimae/nodecg-cartographer",
+  "author": "Corvimae",
+  "license": "MIT",
+  "scripts": {
+    "watch": "npx parcel watch",
+    "build": "npx parcel build"
+  },
+  "targets": {
+    "graphics": {
+      "source": "src/graphics/layout.html",
+      "distDir": "graphics",
+      "publicUrl": "."
+    },
+    "extension": {
+      "source": "src/extension.ts",
+      "context": "node",
+      "isLibrary": true,
+      "outputFormat": "commonjs",
+      "distDir": "."
+    }
+  },
+  "nodecg": {
+    "compatibleRange": "^1.5.0",
+    "graphics": [
+      {
+        "file": "layout.html",
+        "width": 1920,
+        "height": 1080
+      }
+    ]
+  },
+  "dependencies": {
+    "chokidar": "^3.5.3",
+    "nodecg-types": "^1.9.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "styled-components": "^5.3.6",
+    "uuid": "^9.0.0",
+    "yaml": "^2.1.3"
+  },
+  "devDependencies": {
+    "@types/react-dom": "^18.0.8",
+    "@types/styled-components": "^5.1.26",
+    "eslint": "^8.26.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-config-next": "^13.0.1",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-jsx-a11y": "^6.6.1",
+    "eslint-plugin-react": "^7.31.10",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "parcel": "^2.7.0"
+  }
+}
