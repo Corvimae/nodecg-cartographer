@@ -17,7 +17,6 @@ export const SourceComponent: React.FC<SourceComponentProps> = props => {
     
     const [x, y] = props.resolution.split('x').map(Number);
 
-    console.log(x, y);
     if (Number.isNaN(x) || Number.isNaN(y)) return 1;
 
     return y / x;

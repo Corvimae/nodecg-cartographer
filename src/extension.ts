@@ -66,7 +66,6 @@ export = (nodecg: NodeCGServer) => {
 
       const spec = JSON.parse(fs.readFileSync(bundleFile).toString());
 
-      console.log(bundle, spec.nodecg.cartographer);
       if (spec.nodecg && spec.nodecg.cartographer) {
         const handlerFileName = spec.nodecg.cartographer.file || 'dist/module.js';
         const cssDirectory = spec.nodecg.cartographer.css || 'css';
