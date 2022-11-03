@@ -1,5 +1,6 @@
-import React, { useMemo, useRef } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import styled from 'styled-components';
+import { useFactoryContext, useSchemaContext } from '../util/LayoutContext';
 
 type SourceComponentProps = React.HTMLAttributes<HTMLDivElement> & {
   id?: string;
@@ -8,6 +9,11 @@ type SourceComponentProps = React.HTMLAttributes<HTMLDivElement> & {
 
 export const SourceComponent: React.FC<SourceComponentProps> = props => {
   const ref = useRef<HTMLDivElement>();
+  const [metrics, setMetrics] = useState<DOMRect>(null);
+  const schema = useSchemaContext();
+  const factories = useFactoryContext();
+
+
   const isDebugMode = useMemo(() => (
     Boolean(Object.fromEntries(new URLSearchParams(window.location.search)).debug)
   ), [window.location.search]);
@@ -22,23 +28,41 @@ export const SourceComponent: React.FC<SourceComponentProps> = props => {
     return y / x;
   }, [props.resolution]);
 
-  const metrics = useMemo(() => {
-    if(!isDebugMode || !ref.current) return null;
-    return ref.current.getBoundingClientRect();
-    
-  }, [isDebugMode, ref.current])
+  React.useEffect(() => {
+    if(!isDebugMode || !ref.current) {
+      if (metrics !== null) setMetrics(null);
+    } else {
+      const current = ref.current.getBoundingClientRect();
 
+      if (!metrics || (current.x !== metrics.x || current.y !== metrics.y || current.width !== metrics.width || current.height !== metrics.height)) {
+        setMetrics(current);
+      }
+    }
+  });
+
+  const Wrapper = useMemo(() => {
+    if (schema.sourceWrapper) {
+      const Factory = factories[schema.sourceWrapper];
+
+      if (Factory) return Factory;
+    }
+    
+    return props => <div {...props} />;
+  }, [factories, schema.sourceWrapper])
+  
   return (
-    <Container ref={ref} debugMode={isDebugMode} {...props} inverseResolution={inverseResolution}>
-      {isDebugMode && (
-        <DebugInfo>
-          <div>{props.id}</div>
-          {metrics && (
-            <div>{metrics.width}x{metrics.height} @ ({metrics.x}, {metrics.y})</div>
-          )}
-        </DebugInfo>
-      )}
-    </Container>
+    <Wrapper>
+      <Container ref={ref} debugMode={isDebugMode} {...props} inverseResolution={inverseResolution}>
+        {isDebugMode && (
+          <DebugInfo>
+            <div>{props.id}</div>
+            {metrics && (
+              <div>{Math.floor(metrics.width)}x{Math.floor(metrics.height)} @ ({Math.floor(metrics.x)}, {Math.floor(metrics.y)})</div>
+            )}
+          </DebugInfo>
+        )}
+      </Container>
+    </Wrapper>
   );
 };
 
@@ -46,7 +70,7 @@ const Container = styled.div<{ inverseResolution: number; debugMode: boolean }>`
   position: relative;
   display: flex;
   width: 100%;
-  height: 100%;
+  /* height: 100%; */
   flex-direction: column;
   justify-content: center;
   align-items: center;

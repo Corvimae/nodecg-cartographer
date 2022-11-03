@@ -1,19 +1,18 @@
 import React from 'react';
 import styled from 'styled-components';
-import { SchemaModuleEntry } from '../../../types/cartographer';
-import { useFactoryContext } from './util/FactoryContext';
+import { SchemaBox, SchemaModuleEntry } from '../../../types/cartographer';
+import { formatSchemaBox, normalizeMetric } from '../../lib/utils';
+import { useFactoryContext } from './util/LayoutContext';
 
 interface LayoutItemProps {
   definition: SchemaModuleEntry;
   parent: string;
 }
 
-function normalizeMetric(value: string | number | null | undefined) {
+function normalizeBox(value: string | null | undefined | SchemaBox) {
   if (value === null || value === undefined) return null;
 
-  if (typeof value === 'number') return `${value}px`;
-
-  return value;
+  return formatSchemaBox(value);
 }
 
 export const LayoutItem: React.FC<LayoutItemProps> = ({ definition: { type, ...props }, parent }) => {
@@ -24,15 +23,19 @@ export const LayoutItem: React.FC<LayoutItemProps> = ({ definition: { type, ...p
 
   const width = normalizeMetric(props.width);
   const height = normalizeMetric(props.height);
+  const padding = normalizeBox(props.padding);
+  const margin = normalizeBox(props.margin);
 
-  const isParentColumn = parent === 'column';
-  const isParentRow = parent === 'root' || parent === 'row';
+  const isParentColumn = parent === 'column' || parent === 'root';
+  const isParentRow = parent === 'row';
   
   return (
     <LayoutItemContainer
       className={`cartographer-${type}`}
       width={width}
       height={height}
+      padding={padding}
+      margin={margin}
       isParentColumn={isParentColumn}
       isParentRow={isParentRow}
     >
@@ -44,6 +47,8 @@ export const LayoutItem: React.FC<LayoutItemProps> = ({ definition: { type, ...p
 interface ContainerProps {
   width: string;
   height: string;
+  padding: string;
+  margin: string;
   isParentColumn: boolean;
   isParentRow: boolean;
 };
@@ -68,5 +73,6 @@ const LayoutItemContainer = styled.div<ContainerProps>`
   min-height: ${props => shouldContainerStretchHeight(props) ? '0' : props.height};
   align-self: ${props => shouldContainerStretchAcrossFlexAxis(props) && 'stretch'};
   flex-grow: ${props => shouldContainerStretchAcrossFlexAxis(props) && '1'};
-
+  padding: ${props => props.padding};
+  margin: ${props => props.margin};
 `;

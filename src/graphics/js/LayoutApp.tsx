@@ -6,7 +6,7 @@ import { ColumnComponent, RowComponent } from './components/ContainerComponents'
 import { DivComponent } from './components/DivComponent';
 import { SourceComponent } from './components/SourceComponent';
 import { LayoutItem } from './LayoutItem';
-import { FactoryContext, FactoryModules } from './util/FactoryContext';
+import { FactoryContext, FactoryModules, SchemaContext } from './util/LayoutContext';
 
 export const LayoutApp = () => {
   const latestFactorySet = useRef({});
@@ -59,11 +59,13 @@ export const LayoutApp = () => {
 
   return (
     <FactoryContext.Provider value={factories}>
-      <Container>
-        {activeLayout.root.map((item, index) => (
-          <LayoutItem key={index} definition={item} parent="root" />
-        ))}
-      </Container>
+      <SchemaContext.Provider value={activeLayout}>
+        <Container>
+          {activeLayout.root.map((item, index) => (
+            <LayoutItem key={index} definition={item} parent="root" />
+          ))}
+        </Container>
+      </SchemaContext.Provider>
     </FactoryContext.Provider>
   );
 }
@@ -72,5 +74,5 @@ const Container = styled.div`
   width: 100vw;
   height: 100vh;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
 `;

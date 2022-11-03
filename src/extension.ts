@@ -29,6 +29,9 @@ export = (nodecg: NodeCGServer) => {
   function registerSchema(filename: string) {
     try {
       const config = YAML.parse(fs.readFileSync(filename, 'utf8'));
+
+      if (!config) return;
+
       layoutSchemas.value = {
         ...layoutSchemas.value,
         [config.name]: config,

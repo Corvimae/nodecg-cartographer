@@ -27,6 +27,10 @@ You can then add one or more layout items to `root`. A layout item must specify 
 
 `height` - The height of the layout item's container. Accepts any valid CSS sizing value, or `height` to fill the remaining width in the parent. `height: stretch` is ignored if the parent element is a `row`.
 
+`padding` - The padding of the layout item's container. Accepts any valid CSS sizing value, an object with any/all of the keys `top`, `bottom`, `left`, `right`, `vertical`, `horizontal`.
+
+`margin` - The margin of the layout item's container. Accepts any valid CSS sizing value, an object with any/all of the keys `top`, `bottom`, `left`, `right`, `vertical`, `horizontal`.
+
 Some modules may implement additional properties; refer to the documentation for the module as necessary.
 
 By default, Cartographer comes with these layout item types:
@@ -36,10 +40,15 @@ A column that contains any number of child components.
 
 `children` (array of layout items) - The child layout items.
 
+`justify` (string) - The vertical justification of the items in the column.
+`alignItems` (string) - The horizontal justification of the items in the column.
+
 #### `row`
 A row that contains any number of child components.
 
 `children` (array of layout items) - The child layout items.
+`justify` (string) - The horizontal justification of the items in the row.
+`alignItems` (string) - The vertical justification of the items in the row.
 
 #### `source`
 A blank space for an OBS source. Note that you are responsible for sizing and aligning your sources in OBS to the space left by Cartographer.
@@ -55,6 +64,12 @@ If `debug=1` is set in the query parameters, source elements will show their pos
 A generic div. Accepts any property that React accepts for a div, as well as:
 
 `text` (string) - The text to display in the div.
+
+#### Additional schema properties
+
+Along with `name` and `root`, your schema may specify these optional properties:
+
+`sourceWrapper` - A layout item that will surround any `source` items.
 
 #### Custom Layout Items
 Other NodeCG bundles can define their own additional layout items; almost any overlay will need to implement its own layout items, as Cartographer does not implement any use case-specific features.
