@@ -57,7 +57,7 @@ A blank space for an OBS source. Note that you are responsible for sizing and al
 
 `id` (string, optional) - A reminder for what this source item represents in OBS
 
-If `debug=1` is set in the query parameters, source elements will show their position and dimensions as well as their ID.
+If `debug=1` is set in the query parameters, source elements will show their position and dimensions as well as their ID. By default, these values are floored; if the query parameter `metricRounding=0` is specified, they will be truncated to 2 decimal places instead.
 
 
 #### `div`

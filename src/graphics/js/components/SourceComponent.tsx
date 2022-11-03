@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState } from 'react';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { useFactoryContext, useSchemaContext } from '../util/LayoutContext';
 
@@ -14,9 +14,14 @@ export const SourceComponent: React.FC<SourceComponentProps> = props => {
   const factories = useFactoryContext();
 
 
-  const isDebugMode = useMemo(() => (
-    Boolean(Object.fromEntries(new URLSearchParams(window.location.search)).debug)
-  ), [window.location.search]);
+  const [isDebugMode, metricRounding] = useMemo(() => {
+    const params = Object.fromEntries(new URLSearchParams(window.location.search));
+
+    return [
+      params.debug && (params.debug === '1' || params.debug.toLowerCase() === 'true'),
+      params.metricRounding ? (params.metricRounding === '1' || params.metricRounding.toLowerCase() === 'true') : true,
+    ];
+  }, [window.location.search]);
 
   const inverseResolution = useMemo(() => {
     if (!props.resolution) return 1;
@@ -27,6 +32,12 @@ export const SourceComponent: React.FC<SourceComponentProps> = props => {
 
     return y / x;
   }, [props.resolution]);
+
+  const possiblyRound = useCallback(value => {
+    if (metricRounding) return Math.floor(value);
+
+    return value.toFixed(2);
+  }, [metricRounding]);
 
   React.useEffect(() => {
     if(!isDebugMode || !ref.current) {
@@ -57,7 +68,7 @@ export const SourceComponent: React.FC<SourceComponentProps> = props => {
           <DebugInfo>
             <div>{props.id}</div>
             {metrics && (
-              <div>{Math.floor(metrics.width)}x{Math.floor(metrics.height)} @ ({Math.floor(metrics.x)}, {Math.floor(metrics.y)})</div>
+              <div>{possiblyRound(metrics.width)}x{possiblyRound(metrics.height)} @ ({possiblyRound(metrics.x)}, {possiblyRound(metrics.y)})</div>
             )}
           </DebugInfo>
         )}
@@ -81,6 +92,7 @@ const Container = styled.div<{ inverseResolution: number; debugMode: boolean }>`
 const DebugInfo = styled.div`
   position: absolute;
   text-align: center;
+  width: 100%;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
