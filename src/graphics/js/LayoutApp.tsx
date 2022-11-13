@@ -56,6 +56,14 @@ export const LayoutApp = () => {
     }
   }, []);
 
+  useEffect(() => {
+    if (debugMode) {
+      document.body.classList.add('debug');
+    } else {
+      document.body.classList.remove('debug');
+    }
+  }, [debugMode]);
+
   if (!activeLayout) return null;
 
   return (
