@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useMemo, useState, useEffect, useRef } from 'react';
 import { clone } from 'lodash';
 
 interface UseReplicantOptions<T> {
@@ -102,4 +102,17 @@ export function useOnMount(callback: React.EffectCallback) {
       if (onDismount) onDismount();
     };
   }, []);
+}
+
+export function useIsDebugMode(): [boolean, boolean] {
+	const [isDebugMode, metricRounding] = useMemo(() => {
+    const params = Object.fromEntries(new URLSearchParams(window.location.search));
+
+    return [
+      params.debug && (params.debug === '1' || params.debug.toLowerCase() === 'true'),
+      params.metricRounding ? (params.metricRounding === '1' || params.metricRounding.toLowerCase() === 'true') : true,
+    ];
+  }, [window.location.search]);
+
+	return [isDebugMode, metricRounding];
 }

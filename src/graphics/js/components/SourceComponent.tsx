@@ -1,5 +1,6 @@
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import styled from 'styled-components';
+import { useIsDebugMode } from '../../../lib/hooks';
 import { useFactoryContext, useSchemaContext } from '../util/LayoutContext';
 
 type SourceComponentProps = React.HTMLAttributes<HTMLDivElement> & {
@@ -13,15 +14,7 @@ export const SourceComponent: React.FC<SourceComponentProps> = props => {
   const schema = useSchemaContext();
   const factories = useFactoryContext();
 
-
-  const [isDebugMode, metricRounding] = useMemo(() => {
-    const params = Object.fromEntries(new URLSearchParams(window.location.search));
-
-    return [
-      params.debug && (params.debug === '1' || params.debug.toLowerCase() === 'true'),
-      params.metricRounding ? (params.metricRounding === '1' || params.metricRounding.toLowerCase() === 'true') : true,
-    ];
-  }, [window.location.search]);
+  const [isDebugMode, metricRounding] = useIsDebugMode();
 
   const inverseResolution = useMemo(() => {
     if (!props.resolution) return 1;

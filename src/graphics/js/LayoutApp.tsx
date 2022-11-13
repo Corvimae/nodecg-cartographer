@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import styled from 'styled-components';
-import { useReplicant, useListenFor } from '../../lib/hooks';
+import { useReplicant, useListenFor, useIsDebugMode } from '../../lib/hooks';
 import { BUNDLE_NAME } from '../../lib/utils';
 import { ColumnComponent, RowComponent } from './components/ContainerComponents';
 import { DivComponent } from './components/DivComponent';
@@ -43,6 +43,7 @@ export const LayoutApp = () => {
   ), [window.location.search]);
   
   const activeLayout = layoutSchemas && layoutSchemas[layoutKey];
+  const [debugMode] = useIsDebugMode();
 
   useEffect(() => {
     if (!hasRegisteredDefaults.current) {
@@ -60,7 +61,7 @@ export const LayoutApp = () => {
   return (
     <FactoryContext.Provider value={factories}>
       <SchemaContext.Provider value={activeLayout}>
-        <Container>
+        <Container className={`cartographer-root ${debugMode ? 'debug' : ''}`}>
           {activeLayout.root.map((item, index) => (
             <LayoutItem key={index} definition={item} parent="root" />
           ))}
