@@ -1,11 +1,12 @@
-import React, { useCallback, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useMemo, useRef, useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { useIsDebugMode } from '../../../lib/hooks';
+import { useIsDebugMode, useOnMount } from '../../../lib/hooks';
 import { useFactoryContext, useSchemaContext } from '../util/LayoutContext';
 
 type SourceComponentProps = React.HTMLAttributes<HTMLDivElement> & {
   id?: string;
   resolution?: string;
+  ignoreWrapper?: boolean;
 }
 
 export const SourceComponent: React.FC<SourceComponentProps> = props => {
@@ -13,6 +14,7 @@ export const SourceComponent: React.FC<SourceComponentProps> = props => {
   const [metrics, setMetrics] = useState<DOMRect>(null);
   const schema = useSchemaContext();
   const factories = useFactoryContext();
+  const debugIntervalId = useRef(null);
 
   const [isDebugMode, metricRounding] = useIsDebugMode();
 
@@ -32,20 +34,26 @@ export const SourceComponent: React.FC<SourceComponentProps> = props => {
     return value.toFixed(2);
   }, [metricRounding]);
 
-  React.useEffect(() => {
+  useOnMount(() => {
     if(!isDebugMode || !ref.current) {
       if (metrics !== null) setMetrics(null);
+      if (debugIntervalId.current) clearInterval(debugIntervalId.current);
     } else {
-      const current = ref.current.getBoundingClientRect();
+      const updateMetrics = () => {
+        const current = ref.current.getBoundingClientRect();
 
-      if (!metrics || (current.x !== metrics.x || current.y !== metrics.y || current.width !== metrics.width || current.height !== metrics.height)) {
-        setMetrics(current);
-      }
+        if (!metrics || (current.x !== metrics.x || current.y !== metrics.y || current.width !== metrics.width || current.height !== metrics.height)) {
+          setMetrics(current);
+        }
+      };
+
+      debugIntervalId.current = setInterval(updateMetrics, 5000);
+      updateMetrics();
     }
   });
 
   const Wrapper = useMemo(() => {
-    if (schema.sourceWrapper) {
+    if (schema.sourceWrapper && !props.ignoreWrapper) {
       const Factory = factories[schema.sourceWrapper];
 
       if (Factory) return Factory;
