@@ -71,7 +71,7 @@ export const LayoutApp = () => {
   return (
     <FactoryContext.Provider value={factories}>
       <SchemaContext.Provider value={activeLayout}>
-        <Container className={`cartographer-root ${debugMode ? 'debug' : ''}`}>
+        <Container className={`cartographer-root ${debugMode ? 'debug' : ''} ${activeLayout ? activeLayout.name : 'no-layout'}`}>
           {activeLayout.root.map((item, index) => (
             <LayoutItem key={index} definition={item} parent="root" />
           ))}
