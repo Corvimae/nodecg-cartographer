@@ -68,6 +68,18 @@ A generic div. Accepts any property that React accepts for a div, as well as:
 
 `text` (string) - The text to display in the div.
 
+#### `image`
+One or more images. If multiple images are specified, they will be shown in a carousel where they fade in and out over each other.
+
+`src` (string or array of strings) - The URL or URLS of the images to show in the carousel.
+
+`resolution` (`WxH` e.g. `4x3`, optional) - The resolution of the image(s). If you are specifying multiple images, they should all be the same resolution. By default, the resolution is 1x1.
+
+`speed` (number, optional) - The time, in milliseconds, that an image is shown before transitioning to the next image in the carousel. By default, this is 5000 milliseconds.
+
+
+`transitionSpeed` (number, optional) - The time, in milliseconds, that an image takes to fade in or out. By default, this is 250 milliseconds.
+
 #### Additional schema properties
 
 Along with `name` and `root`, your schema may specify these optional properties:
