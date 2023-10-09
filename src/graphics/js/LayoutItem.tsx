@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { CSSProperties } from 'react';
 import styled from 'styled-components';
 import { SchemaBox, SchemaModuleEntry } from '../../../types/cartographer';
 import { formatSchemaBox, normalizeMetric } from '../../lib/utils';
@@ -15,7 +15,7 @@ function normalizeBox(value: string | null | undefined | SchemaBox) {
   return formatSchemaBox(value);
 }
 
-export const LayoutItem: React.FC<LayoutItemProps> = ({ definition: { type, ...props }, parent }) => {
+export const LayoutItem: React.FC<LayoutItemProps> = ({ definition: { type, style, ...props }, parent }) => {
   const factories = useFactoryContext();
   const Factory = factories[type];
 
@@ -36,6 +36,7 @@ export const LayoutItem: React.FC<LayoutItemProps> = ({ definition: { type, ...p
       height={height}
       padding={padding}
       margin={margin}
+      style={style || {}}
       isParentColumn={isParentColumn}
       isParentRow={isParentRow}
     >
@@ -49,6 +50,7 @@ interface ContainerProps {
   height: string;
   padding: string;
   margin: string;
+  style: CSSProperties;
   isParentColumn: boolean;
   isParentRow: boolean;
 };
