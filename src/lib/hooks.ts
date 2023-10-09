@@ -13,7 +13,7 @@ export function useReplicant<T>(
   initialValue: T,
   options: UseReplicantOptions<T>,
   onChange?: (value: T) => void,
-) {
+): [T, (value: T) => void ] {
 	const [value, updateValue] = useState(initialValue);
 	const onChangeHandler = useRef(null);
 	const replicantOptions = options && {

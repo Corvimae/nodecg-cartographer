@@ -77,8 +77,11 @@ One or more images. If multiple images are specified, they will be shown in a ca
 
 `speed` (number, optional) - The time, in milliseconds, that an image is shown before transitioning to the next image in the carousel. By default, this is 5000 milliseconds.
 
-
 `transitionSpeed` (number, optional) - The time, in milliseconds, that an image takes to fade in or out. By default, this is 250 milliseconds.
+
+`assetsKey` (string, optional) - The name of the [assets](https://www.nodecg.dev/docs/assets/) category to carousel between. If `assetsKey` and `assetsBundle` are both set, `src` is ignored. Note that the resolution of the image is fixed, so assets should be uploaded with a consistent resolution.
+
+`assetsBundle` (string, optional) - The name of the NodeCG bundle that the [assets](https://www.nodecg.dev/docs/assets/) category to use is defined in. If `assetsKey` and `assetsBundle` are both set, `src` is ignored.
 
 #### Additional schema properties
 

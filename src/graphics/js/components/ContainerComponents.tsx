@@ -5,20 +5,20 @@ import { LayoutItem } from '../LayoutItem';
 
 type Direction = 'row' | 'column';
 
-type ContainerComponentProps = React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement> & {
+type ContainerComponentProps = React.HTMLAttributes<HTMLDivElement> & {
   children?: SchemaModuleEntry[];
   justify?: string;
   alignItems?: string;
 }
-
 
 const ContainerComponent: React.FC<ContainerComponentProps & { direction: Direction }> = ({
   direction,
   justify,
   alignItems,
   children = [],
+  ...props
 }) => (
-  <Container direction={direction} justify={justify} alignItems={alignItems}>
+  <Container direction={direction} justify={justify} alignItems={alignItems} {...props}>
     {children.map((childDefinition, index) => (
       <LayoutItem key={index} definition={childDefinition} parent={direction} />
     ))}

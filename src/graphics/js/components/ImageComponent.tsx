@@ -1,31 +1,44 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import styled from 'styled-components';
+import { useReplicant } from '../../../lib/hooks';
 
 interface ImageComponentProps {
   src?: string | string[];
   resolution?: string;
   speed?: number;
   transitionSpeed: number;
+  assetsKey?: string;
+  assetsBundle?: string;
 }
 
 const DEFAULT_CAROUSEL_SPEED = 5000;
+
 
 export const ImageComponent: React.FC<ImageComponentProps> = ({
   src,
   resolution,
   speed,
   transitionSpeed,
+  assetsKey,
+  assetsBundle,
   ...props
 }) => {
+  const [assets] = useReplicant<{ url: string }[]>(`assets:${assetsKey}`, [], {
+    namespace: assetsBundle,
+  });
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const carouselIntervalId = useRef(null);
   const activeImageIndexRef = useRef(0);
 
   const images = useMemo(() => {
+    if (assetsKey && assetsBundle) {
+      return assets.map(asset => asset.url);
+    }
+
     if (typeof src === 'string') return [src];
 
     return src;
-  }, [src]);
+  }, [src, assetsKey, assetsBundle, assets]);
 
   const inverseResolution = useMemo(() => {
     if (!resolution) return 1;
