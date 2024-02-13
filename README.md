@@ -15,7 +15,7 @@ yarn build # or `npm run build`
 
 ## Creating Layouts
 
-Cartographer loads all YAML layouts present at `$NODECG_ROOT/layouts` (by default, this is a `layouts` folder at your NodeCG installation). To create a new layout, add a new YAML file  to the `layouts` folder with the following:
+Cartographer loads all YAML layouts present at `$NODECG_ROOT/layouts` (by default, this is a `layouts` folder at your NodeCG installation), as well as any layouts within a `layouts` folder in a Cartographer-enabled bundle. To create a new layout, add a new YAML file to a `layouts` folder with the following:
 
 ```yaml
 name: my-layout
@@ -82,6 +82,11 @@ One or more images. If multiple images are specified, they will be shown in a ca
 `assetsKey` (string, optional) - The name of the [assets](https://www.nodecg.dev/docs/assets/) category to carousel between. If `assetsKey` and `assetsBundle` are both set, `src` is ignored. Note that the resolution of the image is fixed, so assets should be uploaded with a consistent resolution.
 
 `assetsBundle` (string, optional) - The name of the NodeCG bundle that the [assets](https://www.nodecg.dev/docs/assets/) category to use is defined in. If `assetsKey` and `assetsBundle` are both set, `src` is ignored.
+
+#### `iframe`
+An iframe that stretches to fit its container. Accepts any property that React accepts for an iframe. 
+
+In most cases you should build your [own layout item](#custom-layout-items), but they can be useful to include a component from a legacy layout system until you're able to reimplement it as a Cartographer component.
 
 #### Additional schema properties
 

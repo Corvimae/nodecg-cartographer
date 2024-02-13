@@ -4,6 +4,7 @@ import { useReplicant, useListenFor, useIsDebugMode } from '../../lib/hooks';
 import { BUNDLE_NAME } from '../../lib/utils';
 import { ColumnComponent, RowComponent } from './components/ContainerComponents';
 import { DivComponent } from './components/DivComponent';
+import { IframeComponent } from './components/IframeComponent';
 import { ImageComponent } from './components/ImageComponent';
 import { SourceComponent } from './components/SourceComponent';
 import { LayoutItem } from './LayoutItem';
@@ -53,6 +54,7 @@ export const LayoutApp = () => {
       registerModule('column', ColumnComponent);
       registerModule('source', SourceComponent);
       registerModule('image', ImageComponent);
+      registerModule('iframe', IframeComponent);
 
       hasRegisteredDefaults.current = true;
     }

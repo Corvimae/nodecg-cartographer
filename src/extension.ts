@@ -7,14 +7,41 @@ import { BUNDLE_NAME } from './lib/utils';
 import { error, log } from './lib/log';
 import { info } from 'console';
 
+function getCartographerConfig(bundlePath: string) {
+  const bundleFile = path.join(bundlePath, 'package.json')
+      
+  if (!fs.existsSync(bundleFile)) return;
 
+  const spec = JSON.parse(fs.readFileSync(bundleFile).toString());
+  
+  return spec.nodecg && spec.nodecg.cartographer;
+}
+
+function findLayouts(layoutPath: string): string[] {
+  if (!fs.existsSync(layoutPath)) return [];
+  if (layoutPath.includes('bundles')) {
+    // Check to make sure Cartographer is enabled
+    if (!getCartographerConfig(path.join(layoutPath, '..'))) {
+      return [];
+    }
+  }
+  const layouts = fs.readdirSync(layoutPath).map(filename => path.join(layoutPath, filename));
+
+  log(`Found ${layouts.length} layout(s) at ${layoutPath}.`);
+
+  return layouts;
+}
 
 export = (nodecg: NodeCGServer) => {
-  const yamlDir = process.env.CARTOGRAPHER_LAYOUT_DIR || path.join(process.env.NODECG_ROOT, 'layouts');
+  // NODECG_ROOT isn't reliable anymore it seems, but we know where the bundle has to be installed.
+  const nodeCGRoot = process.env.NODECG_ROOT || path.join(__dirname, '..', '..', '..');
+  const rootLayoutDir = process.env.CARTOGRAPHER_LAYOUT_DIR || path.join(nodeCGRoot, 'layouts');
 
-  const layouts = fs.readdirSync(yamlDir).map(filename => path.join(yamlDir, filename));
-
-  log(`[Cartographer] Found ${layouts.length} layout(s) at ${yamlDir}.`);
+  const bundleDirs = fs.readdirSync(path.join(nodeCGRoot, 'bundles')).map(filename => path.join(nodeCGRoot, 'bundles', filename, 'layouts'));
+  const layouts = [
+    rootLayoutDir,
+    ...bundleDirs,
+  ].flatMap(findLayouts)
 
   const layoutSchemas = nodecg.Replicant('layoutSchemas', BUNDLE_NAME, {
     defaultValue: {},
@@ -57,21 +84,16 @@ export = (nodecg: NodeCGServer) => {
   });
 
   // Scan bundles for any with cartographer: true
-  const bundleRoot = path.join(process.env.NODECG_ROOT, 'bundles');
+  const bundleRoot = path.join(nodeCGRoot, 'bundles');
   
   const bundleFolders = fs.readdirSync(bundleRoot);
 
   bundleFolders.forEach(bundle => {
     try {
-      const bundleFile = path.join(bundleRoot, bundle, 'package.json')
-      
-      if (!fs.existsSync(bundleFile)) return;
-
-      const spec = JSON.parse(fs.readFileSync(bundleFile).toString());
-
-      if (spec.nodecg && spec.nodecg.cartographer) {
-        const handlerFileName = spec.nodecg.cartographer.file || 'dist/module.js';
-        const cssDirectory = spec.nodecg.cartographer.css || 'css';
+      const cartographerConfig = getCartographerConfig(path.join(bundleRoot, bundle));
+      if (!!cartographerConfig) {
+        const handlerFileName = cartographerConfig.file || 'dist/module.js';
+        const cssDirectory = cartographerConfig.css || 'css';
 
         const cssAssets = fs.readdirSync(path.join(bundleRoot, bundle, cssDirectory))
           .filter(file => file.endsWith('.css'))
