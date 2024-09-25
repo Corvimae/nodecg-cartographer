@@ -84,7 +84,7 @@ One or more images. If multiple images are specified, they will be shown in a ca
 `assetsBundle` (string, optional) - The name of the NodeCG bundle that the [assets](https://www.nodecg.dev/docs/assets/) category to use is defined in. If `assetsKey` and `assetsBundle` are both set, `src` is ignored.
 
 #### `iframe`
-An iframe that stretches to fit its container. Accepts any property that React accepts for an iframe. 
+An iframe that stretches to fit its container. Accepts any property that React accepts for an iframe.
 
 In most cases you should build your [own layout item](#custom-layout-items), but they can be useful to include a component from a legacy layout system until you're able to reimplement it as a Cartographer component.
 
@@ -134,6 +134,12 @@ Other NodeCG bundles can define their own additional layout items; almost any ov
       - type: timer
     ```
 
+#### Using Typescript for custom layouts
+
+If you'd like to use Typescript for your bundle, add a `tsconfig.json` to its root directory; Parcel should handle it automatically.
+
+Copy the file from this repo at `types/cartographer-browser.d.ts` to your bundle and import it in your `tsconfig.json`.
+
 ## Example Layout
 
 ```yaml
@@ -158,3 +164,4 @@ root:
     - type: div
       text: Put something here!
 ```
+
