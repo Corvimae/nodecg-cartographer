@@ -120,7 +120,7 @@ Other NodeCG bundles can define their own additional layout items; almost any ov
     });
     ```
 
-    The global `cartographer` object also exposes the `useReplicant` and `useListenFor` hooks, originally from [use-nodecg](https://github.com/Hoishin/use-nodecg).
+    The global `cartographer` object also exposes the `useReplicant` and `useListenFor` hooks, originally from [use-nodecg](https://github.com/Hoishin/use-nodecg). _(Note: as of 2024, the hooks in this repo have been refactored and their arguments have changed. Cartographer currently uses the old version of `useReplicant`, which takes the arguments `name, defaultValue, opts`.)_
 
     **NOTE:** The global `cartographer` object exposes the React hooks `useEffect`, `useState`, `useCallback`, `useMemo`, and `useRef`. You **MUST** use these versions in order to prevent issues with mismatched `react` instances.
 
