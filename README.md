@@ -9,8 +9,8 @@ and Cartographer handles all the alignment and dependency injection and stuff.
 ```bash
 nodecg install corvimae/nodecg-cartographer
 cd bundles/nodecg-cartographer
-yarn # or `npm install`
-yarn build # or `npm run build`
+pnpm install # or `npm install`
+pnpm build # or `npm run build`
 ```
 
 ## Creating Layouts
